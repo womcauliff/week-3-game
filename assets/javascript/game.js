@@ -78,9 +78,10 @@ function resetGuessDisplay() {
 	document.getElementById("guesses").innerHTML = "";
 }
 function resetGame() {
-	//TODO: choose random word
-	var word = pokemon[0];
-
+	
+	//TODO: remove hardcoding
+	var word = pokemon[0];//var word = pokemon[Math.floor(Math.random() * computerChoices.length)];
+	
 	//reset Objects
 	secretWord.reset(word);
 	guessTracker.reset();
@@ -115,6 +116,9 @@ document.onkeyup = function (event) {
 					resetGame();
 					resetting = false;
 				}, 3000);
+			}
+			else {
+				//TODO: display partial answer with new guess
 			}
 		}
 		else {

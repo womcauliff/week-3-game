@@ -29,6 +29,7 @@ var guessTracker = {
  */
 var secretWord = {
 
+	sourceWord: "",
 	uniques: 0,
 	uniquesFound: 0,
 	solved: false,
@@ -49,6 +50,7 @@ var secretWord = {
 	},
 
 	reset: function(source) {
+		this.sourceWord = source;
 		this.uniques = 0;
 		this.uniquesFound = 0;
 		this.letters = new Array(26+1).join('0').split('').map(parseFloat);
@@ -62,29 +64,39 @@ var secretWord = {
 			}
 		}
 	}
-
-
-}
-
-function resetGuessDisplay() {
-	document.getElementById("guessesLeft").innerHTML = guessesLeft;
-	document.getElementById("guesses").innerHTML = "";
 }
 
 /**
  * Setting Up for Game
  */
 var pokemon = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree", "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate", "Spearow", "Fearow", "Ekans", "Arbok", "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Nidoran♀", "Nidorina", "Nidoqueen", "Nidoran♂", "Nidorino", "Nidoking", "Clefairy", "Clefable", "Vulpix", "Ninetales", "Jigglypuff", "Wigglytuff", "Zubat", "Golbat", "Oddish", "Gloom", "Vileplume", "Paras", "Parasect", "Venonat", "Venomoth", "Diglett", "Dugtrio", "Meowth", "Persian", "Psyduck", "Golduck", "Mankey", "Primeape", "Growlithe", "Arcanine", "Poliwag", "Poliwhirl", "Poliwrath", "Abra", "Kadabra", "Alakazam", "Machop", "Machoke", "Machamp", "Bellsprout", "Weepinbell", "Victreebel", "Tentacool", "Tentacruel", "Geodude", "Graveler", "Golem", "Ponyta", "Rapidash", "Slowpoke", "Slowbro", "Magnemite", "Magneton", "Farfetch'd", "Doduo", "Dodrio", "Seel", "Dewgong", "Grimer", "Muk", "Shellder", "Cloyster", "Gastly", "Haunter", "Gengar", "Onix", "Drowzee", "Hypno", "Krabby", "Kingler", "Voltorb", "Electrode", "Exeggcute", "Exeggutor", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan", "Lickitung", "Koffing", "Weezing", "Rhyhorn", "Rhydon", "Chansey", "Tangela", "Kangaskhan", "Horsea", "Seadra", "Goldeen", "Seaking", "Staryu", "Starmie", "Mr. Mime", "Scyther", "Jynx", "Electabuzz", "Magmar", "Pinsir", "Tauros", "Magikarp", "Gyarados", "Lapras", "Ditto", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Porygon", "Omanyte", "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno", "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"];
-var word = pokemon[0];
+var guessesLeft = 6;
+var resetting = false;
 
+function resetGuessDisplay() {
+	document.getElementById("guessesLeft").innerHTML = guessesLeft;
+	document.getElementById("guesses").innerHTML = "";
+}
+function resetGame() {
+	//TODO: choose random word
+	var word = pokemon[0];
 
-secretWord.reset(word);
-guessTracker.reset();
+	//reset Objects
+	secretWord.reset(word);
+	guessTracker.reset();
+	guessesLeft = 6;
+	resetGuessDisplay();
+}
 
-guessesLeft = 6;
-resetGuessDisplay();
+resetGame();
 
 document.onkeyup = function (event) {
+
+	if(resetting == true){
+		console.log("sorry, still loading");
+		return;
+	}
+
 	var keycode = event.keyCode;
 
 	// ignore non-letter keys
@@ -94,10 +106,15 @@ document.onkeyup = function (event) {
 	if(guessTracker.isNewGuess(keycode)) {
 
 		if (secretWord.containsGuess(keycode)){
-			//update DOM
 			console.log("good guess!");
 			if(secretWord.isSolved()) {
 				console.warn("You Win!");
+				console.log("new game in 3 seconds");
+				resetting = true;
+				setTimeout(function(){
+					resetGame();
+					resetting = false;
+				}, 3000);
 			}
 		}
 		else {
@@ -112,8 +129,11 @@ document.onkeyup = function (event) {
 	}
 	if (guessesLeft == 0) {
 		console.warn("You Lose!");
-		guessTracker.reset();
-		guessesLeft = 6;
-		resetGuessDisplay();
+		console.log("new game in 3 seconds");
+		resetting = true;
+		setTimeout(function(){
+			resetGame();
+			resetting = false;
+		}, 3000);
 	}
 };

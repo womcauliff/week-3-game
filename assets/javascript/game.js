@@ -40,9 +40,8 @@ var secretWord = {
 		if (this.alphabet[(unicodeLetter-65)] !== 0){
 			this.uniquesFound++;
 
-			//update display, swapping blanks with correct letter
+			//update displayWord, swapping blanks with correct letter
 			this.fillBlanks(unicodeLetter);
-console.log(this.displayWord);
 			return true;
 		}
 		else {
@@ -56,31 +55,22 @@ console.log(this.displayWord);
 
 	fillBlanks: function(unicodeLetter) {
 		for (var i = 0; i < this.alphabet[(unicodeLetter-65)].length; i++) {
-console.log("displayWord: " + this.displayWord);
-console.log("replacing the blank at " + this.alphabet[(unicodeLetter-65)][i] + " with " + String.fromCharCode(unicodeLetter));
-console.log(this.displayWord.slice(0, this.alphabet[(unicodeLetter-65)][i]) );	
-console.log(String.fromCharCode(unicodeLetter));
-console.log(this.displayWord.slice(((this.alphabet[(unicodeLetter-65)][i])+1), this.displayWord.length));			
 				this.displayWord = 
 					this.displayWord.slice(0, this.alphabet[(unicodeLetter-65)][i]) 
 					+ String.fromCharCode(unicodeLetter) 
 					+ (this.displayWord.slice(((this.alphabet[(unicodeLetter-65)][i])+1), this.displayWord.length));
-console.log("displayWord: " + this.displayWord);	
 		}
 	},
 
 	reset: function(source) {
 		this.sourceWord = source;
 		this.displayWord = this.sourceWord.replaceAll("[A-Za-z]", "_");
-console.log(this.sourceWord);
-console.log(this.displayWord);
 		this.uniques = 0;
 		this.uniquesFound = 0;
 		this.alphabet = new Array(26+1).join('0').split('').map(parseFloat);
 		source = source.toLowerCase();
 		for (var i = 0; i < source.length; i++) {
 			var singleLetter = source[i];
-console.log(singleLetter);
 			var lookupIndex = singleLetter.charCodeAt(0) - 97;
 			if (this.alphabet[lookupIndex] === 0){
 				this.alphabet[lookupIndex] = [i];
@@ -88,13 +78,9 @@ console.log(singleLetter);
 			}
 			else{
 				//letter occurs more than once in word
-console.log("second time with "  + singleLetter +  lookupIndex);
 				this.alphabet[lookupIndex].push(i);
-console.log(this.alphabet[lookupIndex]);
 			}
 		}
-console.log("Alphabet:");
-console.log(this.alphabet);
 	}
 }
 
@@ -128,12 +114,15 @@ function resetGame() {
 	resetGuessDisplay();
 }
 
+
+
+//for initial page load
 resetGame();
 
 document.onkeyup = function (event) {
 
+	//still loading next round, ignore input
 	if(resetting == true){
-		console.log("sorry, still loading");
 		return;
 	}
 
@@ -143,16 +132,23 @@ document.onkeyup = function (event) {
 	if (keycode < 65 || keycode > 90) {
 		return;
 	}
+
+	//new guess
 	if(guessTracker.isNewGuess(keycode)) {
 
+		//show guess
+		var letter = String.fromCharCode(event.keyCode).toLowerCase();
+		var prev = document.getElementById("guesses").innerHTML;
+		document.getElementById("guesses").innerHTML = prev + " " + letter;
+
+		//correct guess
 		if (secretWord.containsGuess(keycode)){
-			console.log("good guess!");
 			//update blanks with correctly guessed letter
 			document.getElementById("hiddenword").innerHTML = secretWord.displayWord;
+			
+			//Won game, reset for next game
 			if(secretWord.isSolved()) {
 				wins++;
-				console.warn("You Win!");
-				console.log("new game in 3 seconds");
 				resetting = true;
 				setTimeout(function(){
 					resetGame();
@@ -160,20 +156,16 @@ document.onkeyup = function (event) {
 				}, 3000);
 			}
 		}
+		//incorrect guess
 		else {
-			console.log("whoops.");
 			guessesLeft--;
+			document.getElementById("guessesLeft").innerHTML = guessesLeft;
 		}
-		
-		var letter = String.fromCharCode(event.keyCode).toLowerCase();
-		var prev = document.getElementById("guesses").innerHTML;
-		document.getElementById("guesses").innerHTML = prev + " " + letter;
-		document.getElementById("guessesLeft").innerHTML = guessesLeft;
 	}
+	// Lose game, reset for next game
 	if (guessesLeft == 0) {
 		document.getElementById("hiddenword").innerHTML = secretWord.sourceWord;
-		console.warn("You Lose!");
-		console.log("new game in 3 seconds");
+
 		resetting = true;
 		setTimeout(function(){
 			resetGame();

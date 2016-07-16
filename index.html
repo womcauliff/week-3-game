@@ -11,29 +11,43 @@
 </head>
 <body>
 	<div class="container">
-		<h1>Who's That Pok&eacute;mon?</h1>
 
-		<h2>Press Any Key to Get Started!</h2>
+		<div class="jumbotron">
+			<h1>Who's That Pok&eacute;mon?</h1>
+<!-- 			<p><img class="img-thumbnail" src="http://i.imgur.com/HddtBOT.png" style="height: 225px;"></p> -->
+      	</div>
+		<div class="row game">
+			<div class="col-md-6">
+				<h4>Press Any Key to Get Started!</h4>
 
-		<div>
-			Wins
-			<div id="wins"></div>
+				<div>
+					Wins
+					<div id="wins"></div>
+				</div>
+
+				<div class="blanks">
+					<h2 id="hiddenword"></h2>
+				</div>
+
+				<div>
+					Number of Guesses Remaining:
+					<div id="guessesLeft"></div>
+				</div>
+				<div>
+					Letters Already Guessed:
+					[<div id="guesses"></div>]
+				</div>
+			</div>
+			<div class="col-md-6">
+				<img class="img-thumbnail" src="http://i.imgur.com/HddtBOT.png">
+			</div>
 		</div>
 
-		<div class="blanks">
-			<h2 id="hiddenword"></h2>
-		</div>
+		<footer class="footer">
+	        <p>&copy; 2016 Will McAuliff</p>
+	    </footer>
+	</div><!-- ./container -->
 
-		<div>
-			Number of Guesses Remaining:
-			<div id="guessesLeft"></div>
-		</div>
-		<div>
-			Letters Already Guessed:
-			[<div id="guesses"></div>]
-		</div>
-
-	</div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>

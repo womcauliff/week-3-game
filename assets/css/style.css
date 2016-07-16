@@ -2,3 +2,17 @@
 	letter-spacing: 5px;
 	text-transform: uppercase;
 }
+.container {
+	max-width: 730px;
+}
+.jumbotron {
+	background-color: #66c5e1;
+	margin: 0;
+}
+#logo {
+	height: 250px;
+}
+.row.game{
+	margin: 40px 0;
+	background-color: #eee;
+}
